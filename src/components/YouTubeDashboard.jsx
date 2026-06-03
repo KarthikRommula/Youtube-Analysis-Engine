@@ -25,7 +25,13 @@ const YouTubeDashboard = () => {
     setError('');
     
     try {
-      const apiKey = 'AIzaSyBqCIxCKSAT5sK1ezGjhicpJnLSrCPTktk'; // Replace with your actual YouTube API key
+      const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
+      if (!apiKey) {
+        console.error('VITE_YOUTUBE_API_KEY is not defined. Add it to your .env file (see .env.example).');
+        setError('YouTube API key is not configured. Set VITE_YOUTUBE_API_KEY in your .env file.');
+        setIsLoading(false);
+        return;
+      }
       const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${videoId}&maxResults=100&key=${apiKey}`);
       
       if (!response.ok) {
